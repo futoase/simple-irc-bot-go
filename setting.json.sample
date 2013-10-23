@@ -1,0 +1,7 @@
+{
+  "nickname": "karin",
+  "server": "irc.example.com",
+  "ssl": true,
+  "password": "pass",
+  "channel": "#test"
+}
