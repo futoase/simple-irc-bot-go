@@ -9,6 +9,7 @@ import (
 
 type IRCSetting struct {
 	NickName string
+	RealName string
 	Server   string
 	PassWord string
 	SSL      bool
@@ -24,7 +25,7 @@ func main() {
 	if err := json.Unmarshal([]byte(r), &setting); err != nil {
 		panic(err)
 	}
-	c := irc.SimpleClient(setting.NickName)
+	c := irc.SimpleClient(setting.NickName, "", setting.RealName)
 	c.SSL = setting.SSL
 	c.AddHandler(irc.CONNECTED,
 		func(conn *irc.Conn, line *irc.Line) { JoinChannel(conn, line, setting) })
