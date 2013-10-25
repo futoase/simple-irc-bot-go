@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	irc "github.com/fluffle/goirc/client"
+	"github.com/howeyc/fsnotify"
 	"io/ioutil"
 	"time"
 )
@@ -32,6 +33,8 @@ func main() {
 	c.AddHandler("join",
 		func(conn *irc.Conn, line *irc.Line) { WelcomeToUnderground(conn, line, setting) })
 
+	go WatchFile(c, setting, "test.txt")
+
 	quit := make(chan bool)
 	c.AddHandler(irc.DISCONNECTED,
 		func(conn *irc.Conn, line *irc.Line) { quit <- true })
@@ -51,4 +54,33 @@ func WelcomeToUnderground(conn *irc.Conn, line *irc.Line, setting IRCSetting) {
 		time.Sleep(3000 * time.Millisecond)
 		conn.Notice(setting.Channel, line.Nick+", Welcome to underground...")
 	}
+}
+
+func WatchFile(conn *irc.Conn, setting IRCSetting, filePath string) {
+	watcher, err := fsnotify.NewWatcher()
+	if err != nil {
+		panic(err)
+	}
+
+	done := make(chan bool)
+
+	go func() {
+		for {
+			select {
+			case ev := <-watcher.Event:
+				if ev.IsModify() {
+					conn.Notice(setting.Channel, "Update File!: "+filePath)
+				}
+			}
+		}
+	}()
+
+	err = watcher.Watch(filePath)
+	if err != nil {
+		panic(err)
+	}
+
+	<-done
+
+	watcher.Close()
 }
