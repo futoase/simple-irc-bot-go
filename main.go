@@ -6,6 +6,7 @@ import (
 	irc "github.com/fluffle/goirc/client"
 	"github.com/howeyc/fsnotify"
 	"io/ioutil"
+	"regexp"
 	"time"
 )
 
@@ -76,12 +77,22 @@ func WelcomeToUnderground(conn *irc.Conn, line *irc.Line, setting IRCSetting) {
 }
 
 func TailFile(conn *irc.Conn, setting IRCSetting, filePath string) {
-	t, err := tail.TailFile(filePath, tail.Config{Follow: true})
+
+	// Matching of 2013-10-25 10:00:00 +0900 [info]: hogehoge.
+	r, err := regexp.Compile(`^\d{4}-\d\d-\d\d \d\d:\d\d:\d\d \+\d{4} \[info\]:(.*)$`)
+	if err != nil {
+		panic(err)
+	}
+
+	t, err := tail.TailFile(filePath, tail.Config{Follow: true, ReOpen: true})
 	if err != nil {
 		panic(err)
 	}
 	for line := range t.Lines {
-		conn.Notice(setting.Channel, filePath+": "+line.Text)
+		matches := r.FindStringSubmatch(line.Text)
+		if len(matches) == 2 {
+			conn.Notice(setting.Channel, filePath+": "+matches[1])
+		}
 	}
 }
 
