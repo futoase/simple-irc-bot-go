@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"github.com/ActiveState/tail"
 	irc "github.com/fluffle/goirc/client"
 	"github.com/howeyc/fsnotify"
 	"io/ioutil"
@@ -33,6 +34,7 @@ func main() {
 	c.AddHandler("join",
 		func(conn *irc.Conn, line *irc.Line) { WelcomeToUnderground(conn, line, setting) })
 
+	go TailFile(c, setting, "tail-test.txt")
 	go WatchFile(c, setting, "test.txt")
 
 	quit := make(chan bool)
@@ -53,6 +55,16 @@ func WelcomeToUnderground(conn *irc.Conn, line *irc.Line, setting IRCSetting) {
 	if setting.NickName != line.Nick {
 		time.Sleep(3000 * time.Millisecond)
 		conn.Notice(setting.Channel, line.Nick+", Welcome to underground...")
+	}
+}
+
+func TailFile(conn *irc.Conn, setting IRCSetting, filePath string) {
+	t, err := tail.TailFile(filePath, tail.Config{Follow: true})
+	if err != nil {
+		panic(err)
+	}
+	for line := range t.Lines {
+		conn.Notice(setting.Channel, filePath+": "+line.Text)
 	}
 }
 
