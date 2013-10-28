@@ -34,7 +34,7 @@ func main() {
 	c.AddHandler("join",
 		func(conn *irc.Conn, line *irc.Line) { WelcomeToUnderground(conn, line, setting) })
 
-	go TailFile(c, setting, "tail-test.txt")
+	go MonitorFiles(c, setting, "monitored-file-path.json")
 	go WatchFile(c, setting, "test.txt")
 
 	quit := make(chan bool)
@@ -45,6 +45,23 @@ func main() {
 	}
 
 	<-quit
+}
+
+func MonitorFiles(conn *irc.Conn, setting IRCSetting, monitorFilePath string) {
+	r, err := ioutil.ReadFile(monitorFilePath)
+	if err != nil {
+		panic(err)
+	}
+
+	var monitorFiles []string
+	err = json.Unmarshal([]byte(r), &monitorFiles)
+	if err != nil {
+		panic(err)
+	}
+
+	for _, v := range monitorFiles {
+		go TailFile(conn, setting, v)
+	}
 }
 
 func JoinChannel(conn *irc.Conn, line *irc.Line, setting IRCSetting) {
