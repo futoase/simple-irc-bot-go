@@ -1,4 +1,4 @@
-simple-irc-bot-go
+simple-irc-bot-go [![Build Status](https://travis-ci.org/futoase/simple-irc-bot-go.png?branch=master)](https://travis-ci.org/futoase/simple-irc-bot-go)
 =================
 
 simple irc bot by golang.
