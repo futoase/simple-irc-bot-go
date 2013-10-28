@@ -1,0 +1,7 @@
+language: go
+go:
+  - tip
+install:
+  - go get github.com/futoase/simple-irc-bot-go
+script:
+  - go build
