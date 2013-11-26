@@ -1,0 +1,39 @@
+{
+	"ImportPath": "github.com/futoase/simple-irc-bot-go",
+	"GoVersion": "go1.1.2",
+	"Deps": [
+		{
+			"ImportPath": "code.google.com/p/gomock/gomock",
+			"Rev": "ae48011f41cd01e8e4e77d501502d2e734816da2"
+		},
+		{
+			"ImportPath": "github.com/ActiveState/tail",
+			"Rev": "56c4b221b8fd84961abd06962588f7603e356e3b"
+		},
+		{
+			"ImportPath": "github.com/fluffle/goevent/event",
+			"Rev": "972f9141f4868fad5cd0704bb998b56b18742133"
+		},
+		{
+			"ImportPath": "github.com/fluffle/goirc/client",
+			"Rev": "7923e280912752ebfda045cc68cbfb82cf5dd016"
+		},
+		{
+			"ImportPath": "github.com/fluffle/goirc/state",
+			"Rev": "7923e280912752ebfda045cc68cbfb82cf5dd016"
+		},
+		{
+			"ImportPath": "github.com/fluffle/golog/logging",
+			"Rev": "0fad4c8c24e6827252a9ea621274adeb67e17182"
+		},
+		{
+			"ImportPath": "github.com/howeyc/fsnotify",
+			"Rev": "6258bb8183757d12ef2260ac4a18a7665c0ca4c4"
+		},
+		{
+			"ImportPath": "launchpad.net/tomb",
+			"Comment": "17",
+			"Rev": "gustavo@niemeyer.net-20130531003818-70ikdgklbxopn8x4"
+		}
+	]
+}
